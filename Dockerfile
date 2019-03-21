@@ -10,7 +10,7 @@ RUN yum -y install http://repo.opensciencegrid.org/osg/3.4/osg-3.4-el7-release-l
 
 RUN mkdir -p /etc/osg/image-config.d/
 ADD image-config.d/* /etc/osg/image-config.d/
-ADD sbin/* /usr/local/sbin/
+ADD supervisord_startup.sh /usr/local/sbin/
 ADD supervisord.conf /etc/
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
