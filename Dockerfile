@@ -6,7 +6,7 @@ RUN yum -y install http://repo.opensciencegrid.org/osg/3.5/osg-3.5-el7-release-l
                    epel-release \
                    yum-plugin-priorities && \
     yum -y install supervisor cronie && \
-    yum clean all --enablerepo=* && rm -rf /var/cache/yum/
+    rm -rf /var/cache/yum/
 
 RUN mkdir -p /etc/osg/image-config.d/
 ADD image-config.d/* /etc/osg/image-config.d/
