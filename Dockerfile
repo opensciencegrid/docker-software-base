@@ -7,6 +7,7 @@ RUN yum update -y --security --bugfix && \
                    epel-release \
                    yum-plugin-priorities && \
     yum -y install supervisor cronie && \
+    yum clean all && \
     rm -rf /var/cache/yum/
 
 RUN mkdir -p /etc/osg/image-config.d/
