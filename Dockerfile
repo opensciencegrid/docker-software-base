@@ -2,7 +2,7 @@ FROM centos:centos7
 
 LABEL maintainer OSG Software <help@opensciencegrid.org>
 
-RUN yum update -y --security --bugfix && \
+RUN yum update -y && \
     yum -y install http://repo.opensciencegrid.org/osg/3.5/osg-3.5-el7-release-latest.rpm \
                    epel-release \
                    yum-plugin-priorities && \
