@@ -1,9 +1,9 @@
-FROM centos:centos7
+FROM centos:centos8
 
 LABEL maintainer OSG Software <help@opensciencegrid.org>
 
 RUN yum update -y && \
-    yum -y install http://repo.opensciencegrid.org/osg/3.5/osg-3.5-el7-release-latest.rpm \
+    yum -y install http://repo.opensciencegrid.org/osg/3.5/osg-3.5-el8-release-latest.rpm \
                    epel-release \
                    yum-plugin-priorities && \
     yum -y install supervisor cronie && \
