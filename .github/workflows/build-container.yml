@@ -11,9 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    outputs:
-      dtag: ${{ steps.mkdatetag.outputs.dtag }}
-
     steps:
 
     - name: checkout docker-software-base
@@ -32,4 +29,3 @@ jobs:
         tags:
           - fresh
           - ${{ steps.mkdatetag.outputs.dtag }}
-
