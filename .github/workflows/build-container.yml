@@ -26,6 +26,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: opensciencegrid/software-base
-        tags:
-          - fresh
-          - ${{ steps.mkdatetag.outputs.dtag }}
+        tags: fresh,${{ steps.mkdatetag.outputs.dtag }}
