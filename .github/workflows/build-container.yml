@@ -18,7 +18,7 @@ jobs:
 
     - name: make date tag
       id: mkdatetag
-      run: date +%Y%m%d-%H%M
+      run: echo "::set-output name=dtag::$(date +%Y%m%d-%H%M)"
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v1
