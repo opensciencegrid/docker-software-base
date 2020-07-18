@@ -27,3 +27,12 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: opensciencegrid/software-base
         tags: fresh,${{ steps.mkdatetag.outputs.dtag }}
+
+    - name: dispatch build frontier-squid
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        repository: opensciencegrid/docker-frontier-squid
+        event-type: dispatch-build
+        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+
