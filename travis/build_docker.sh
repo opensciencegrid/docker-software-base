@@ -7,8 +7,8 @@ docker_repos='software-base'
 
 for repo in $docker_repos; do
     docker build \
-           -t $org/$repo:fresh \
-           -t $org/$repo:$timestamp \
+           -t $org/$repo:el8-fresh \
+           -t $org/$repo:el8-$timestamp \
            .
 done
 
