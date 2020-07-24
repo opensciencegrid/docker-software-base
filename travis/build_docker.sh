@@ -7,8 +7,8 @@ docker_repos='software-base'
 
 for repo in $docker_repos; do
     docker build \
-           -t $org/$repo:fresh \
-           -t $org/$repo:$timestamp \
+           -t $org/$repo:el7-fresh \
+           -t $org/$repo:el7-$timestamp \
            .
 done
 
@@ -21,7 +21,7 @@ fi
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 for repo in $docker_repos; do
-    for tag in $timestamp fresh; do
+    for tag in el7-$timestamp el7-fresh; do
         docker push $org/$repo:$tag
     done
 done
