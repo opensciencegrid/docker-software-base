@@ -21,7 +21,7 @@ fi
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 for repo in $docker_repos; do
-    for tag in $timestamp fresh; do
+    for tag in el8-$timestamp el8-fresh; do
         docker push $org/$repo:$tag
     done
 done
