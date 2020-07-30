@@ -6,4 +6,5 @@ script: ./travis/build_docker.sh
 branches:
   only:
   - master
+  - EL7
   - EL8
