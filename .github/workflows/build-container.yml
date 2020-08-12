@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    if: github.repository == 'opensciencegrid/docker-software-base'
     steps:
 
     - name: checkout docker-software-base
@@ -30,6 +30,7 @@ jobs:
 
   dispatch:
     runs-on: ubuntu-latest
+    if: github.repository == 'opensciencegrid/docker-software-base'
     needs: build
     strategy:
       matrix:
