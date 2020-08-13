@@ -34,7 +34,9 @@ jobs:
     needs: build
     strategy:
       matrix:
-        dispatch-repo: [docker-frontier-squid, docker-xcache]
+        dispatch-repo:
+        - docker-frontier-squid
+        - docker-xcache
     steps:
 
     - name: dispatch build ${{ matrix.dispatch-repo }}
