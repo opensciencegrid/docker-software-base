@@ -1,4 +1,4 @@
-OSG Software Container Base [![Build Status](https://travis-ci.org/opensciencegrid/docker-software-base.svg?branch=master)](https://travis-ci.org/opensciencegrid/docker-software-base)
+OSG Software Container Base ![build-docker-image](https://github.com/opensciencegrid/docker-software-base/workflows/build-docker-image/badge.svg)
 ===========================
 
 This image serves as the base for images distributed by the OSG Software team.
