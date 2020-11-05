@@ -37,6 +37,7 @@ jobs:
         dispatch-repo:
         - docker-frontier-squid
         - docker-xcache
+        - docker-compute-entrypoint
     steps:
 
     - name: dispatch build ${{ matrix.dispatch-repo }}
