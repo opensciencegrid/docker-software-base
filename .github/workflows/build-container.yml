@@ -8,17 +8,33 @@ on:
     - cron: '7 0 * * sun'
 
 jobs:
-  build:
+  make-date-tag:
     runs-on: ubuntu-latest
-    if: github.repository == 'opensciencegrid/docker-software-base'
+    outputs:
+      dtag: ${{ steps.mkdatetag.outputs.dtag }}
     steps:
-
-    - name: checkout docker-software-base
-      uses: actions/checkout@v2
-
     - name: make date tag
       id: mkdatetag
       run: echo "::set-output name=dtag::$(date +%Y%m%d-%H%M)"
+
+  build:
+    runs-on: ubuntu-latest
+    if: github.repository == 'opensciencegrid/docker-software-base'
+    strategy:
+      matrix:
+        dver: ['7', '8']
+    needs: make-date-tag
+    steps:
+    - name: checkout docker-software-base
+      uses: actions/checkout@v2
+
+    - id: image-tag-prefix
+      env:
+        DVER: ${{ matrix.dver }}
+      run: |
+        TAG_PREFIX=''
+        [[ $DVER == 8 ]] && TAG_PREFIX=el$DVER-
+        echo ":::set-output name=tag::$TAG_PREFIX"
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v1
@@ -26,7 +42,10 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: opensciencegrid/software-base
-        tags: fresh,${{ steps.mkdatetag.outputs.dtag }}
+        build_args: IMAGE_BASE_TAG=centos${{ matrix.dver }}
+        tags: >
+          ${{ steps.image-tag-prefix.outputs.tag }}fresh,
+          ${{ steps.image-tag-prefix.outputs.tag }}${{ needs.make-date-tag.outputs.dtag }}
 
   dispatch:
     runs-on: ubuntu-latest
