@@ -64,9 +64,11 @@ jobs:
     strategy:
       matrix:
         dispatch-repo:
-        - docker-frontier-squid
-        - docker-xcache
         - docker-compute-entrypoint
+        - docker-frontier-squid
+        - docker-hosted-ce
+        - docker-htcondor-ce
+        - docker-xcache
     steps:
 
     - name: dispatch build ${{ matrix.dispatch-repo }}
