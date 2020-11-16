@@ -1,4 +1,4 @@
-OSG Software Container Base ![build-docker-image](https://github.com/opensciencegrid/docker-software-base/workflows/build-docker-image/badge.svg)
+OSG Software Container Base [![build-docker-image](https://github.com/opensciencegrid/docker-software-base/workflows/build-docker-image/badge.svg)](https://github.com/opensciencegrid/docker-software-base/actions?query=workflow%3Abuild-docker-image)
 ===========================
 
 This image serves as the base for images distributed by the OSG Software team.
