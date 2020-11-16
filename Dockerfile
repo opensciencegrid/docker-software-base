@@ -15,7 +15,7 @@ RUN \
        YUM_PKG_NAME="yum-utils"; \
     fi && \
     yum update -y && \
-    yum -y install http://repo.opensciencegrid.org/osg/3.5/osg-3.5-el7-release-latest.rpm \
+    yum -y install http://repo.opensciencegrid.org/osg/3.5/osg-3.5-el${IMAGE_BASE_TAG#centos}-release-latest.rpm \
                    epel-release \
                    $YUM_PKG_NAME && \
     yum -y install supervisor cronie && \

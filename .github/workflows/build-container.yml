@@ -34,7 +34,7 @@ jobs:
       run: |
         TAG_PREFIX=''
         [[ $DVER == 8 ]] && TAG_PREFIX=el$DVER-
-        echo ":::set-output name=tag::$TAG_PREFIX"
+        echo "::set-output name=tag::$TAG_PREFIX"
 
     - id: format-docker-repo
       run: echo "::set-output name=repo-name::${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}"
