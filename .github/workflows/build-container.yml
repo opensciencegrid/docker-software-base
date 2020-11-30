@@ -53,9 +53,8 @@ jobs:
       with:
         push: true
         build-args: IMAGE_BASE_TAG=centos${{ matrix.dver }}
-        tags: >
-          ${{ steps.format-docker-repo.outputs.repo-name }}:${{ steps.image-tag-prefix.outputs.tag }}fresh,
-          ${{ steps.format-docker-repo.outputs.repo-name }}:${{ steps.image-tag-prefix.outputs.tag }}${{ needs.make-date-tag.outputs.dtag }}
+        tags: "${{ steps.format-docker-repo.outputs.repo-name }}:${{ steps.image-tag-prefix.outputs.tag }}fresh,\
+          ${{ steps.format-docker-repo.outputs.repo-name }}:${{ steps.image-tag-prefix.outputs.tag }}${{ needs.make-date-tag.outputs.dtag }}"
 
   dispatch:
     runs-on: ubuntu-latest
