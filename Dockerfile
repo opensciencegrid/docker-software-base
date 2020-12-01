@@ -27,10 +27,8 @@ RUN \
     rm -rf /var/cache/yum/
 
 # Impatiently ignore the Yum mirrors
-RUN for repo in osg-testing osg-upcoming-testing; do \
-        sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
-            /etc/yum.repos.d/$repo.repo; \
-     done
+RUN sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+        /etc/yum.repos.d/osg{,-upcoming}-testing.repo
 
 RUN mkdir -p /etc/osg/image-config.d/
 ADD image-config.d/* /etc/osg/image-config.d/
