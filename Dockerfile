@@ -26,6 +26,12 @@ RUN \
     yum clean all && \
     rm -rf /var/cache/yum/
 
+# Impatiently ignore the Yum mirrors
+RUN for repo in osg-testing osg-upcoming-testing; do \
+        sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+            /etc/yum.repos.d/$repo.repo; \
+     done
+
 RUN mkdir -p /etc/osg/image-config.d/
 ADD image-config.d/* /etc/osg/image-config.d/
 ADD supervisord_startup.sh /usr/local/sbin/
