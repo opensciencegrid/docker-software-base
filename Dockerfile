@@ -20,7 +20,7 @@ RUN \
                    $YUM_PKG_NAME && \
     yum -y install supervisor cronie && \
     if [[ $IMAGE_BASE_TAG != centos7 ]]; then \
-        yum-config-manager --enable PowerTools && \
+        yum-config-manager --enable powertools && \
         yum-config-manager --enable osg-testing; \
     fi && \
     yum clean all && \
