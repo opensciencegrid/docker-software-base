@@ -68,6 +68,7 @@ jobs:
         - docker-hosted-ce
         - docker-htcondor-ce
         - docker-xcache
+        - gratia-probe
     steps:
 
     - name: dispatch build ${{ matrix.dispatch-repo }}
