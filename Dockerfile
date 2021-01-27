@@ -34,5 +34,6 @@ RUN mkdir -p /etc/osg/image-config.d/
 ADD image-config.d/* /etc/osg/image-config.d/
 ADD supervisord_startup.sh /usr/local/sbin/
 ADD supervisord.conf /etc/
+ADD update-certs-rpms-if-present.sh /etc/cron.hourly/
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
