@@ -35,14 +35,16 @@ jobs:
         REPO: ${{ matrix.repo }}
         TIMESTAMP: ${{ needs.make-date-tag.outputs.dtag }}
       run: |
-        TAG_PREFIX=''
-        [[ $DVER == 8 ]] && TAG_PREFIX=el$DVER-
+        TAG_PREFIXES=("el$DVER-")
         TAG_NAMES="$REPO $REPO-$TIMESTAMP"
+        [[ $DVER == 7 ]] && TAG_PREFIXES+=('')
         [[ $REPO == 'testing' ]] && TAG_NAMES="$TAG_NAMES fresh $TIMESTAMP"
         tag_list=''
-        for base in $TAG_NAMES; do
-            tag="${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}:$TAG_PREFIX$base"
-            tag_list="${tag_list}${tag_list:+,}${tag}"
+        for tag_prefix in "${TAG_PREFIXES[@]}"; do
+            for base in $TAG_NAMES; do
+                tag="${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}:$tag_prefix$base"
+                tag_list="${tag_list}${tag_list:+,}${tag}"
+            done
         done
         echo "::set-output name=taglist::$tag_list"
 
