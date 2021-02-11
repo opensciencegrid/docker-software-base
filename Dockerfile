@@ -13,6 +13,10 @@ LABEL maintainer OSG Software <help@opensciencegrid.org>
 RUN \
     if  [[ $IMAGE_BASE_TAG == centos7 ]]; then \
        YUM_PKG_NAME="yum-plugin-priorities"; \
+       yum-config-manager \
+         --setopt=skip_missing_names_on_install=False \
+         --setopt=skip_missing_names_on_update=False \
+         --save > /dev/null; \
     else \
        YUM_PKG_NAME="yum-utils"; \
     fi && \
