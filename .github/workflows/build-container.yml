@@ -39,8 +39,10 @@ jobs:
       run: |
         TAG_PREFIXES=("$SERIES-el$DVER-")
         TAG_NAMES="$REPO $REPO-$TIMESTAMP"
-        [[ $DVER == 7 ]] && TAG_PREFIXES+=('')
-        [[ $REPO == 'testing' ]] && [[ $SERIES == '3.5' ]] && TAG_NAMES="$TAG_NAMES fresh $TIMESTAMP"
+        if [[ $DVER == 7 ]] && [[ $REPO == 'testing' ]] && [[ $SERIES == '3.5' ]]; then
+            TAG_PREFIXES+=('')
+            TAG_NAMES="$TAG_NAMES fresh $TIMESTAMP"
+        fi
         tag_list=''
         for tag_prefix in "${TAG_PREFIXES[@]}"; do
             for base in $TAG_NAMES; do
