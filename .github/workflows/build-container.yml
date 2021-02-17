@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.repository, 'opensciencegrid/')
     strategy:
+      fail-fast: False
       matrix:
         dver: ['7', '8']
         repo: ['development', 'testing', 'release']
