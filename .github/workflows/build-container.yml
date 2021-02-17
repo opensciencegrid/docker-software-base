@@ -24,6 +24,7 @@ jobs:
       matrix:
         dver: ['7', '8']
         repo: ['development', 'testing', 'release']
+        series: ['3.5', '3.6']
     needs: make-date-tag
     steps:
     - name: checkout docker-software-base
@@ -33,12 +34,13 @@ jobs:
       env:
         DVER: ${{ matrix.dver }}
         REPO: ${{ matrix.repo }}
+        SERIES: ${{ matrix series }}
         TIMESTAMP: ${{ needs.make-date-tag.outputs.dtag }}
       run: |
-        TAG_PREFIXES=("el$DVER-")
+        TAG_PREFIXES=("$SERIES-el$DVER-")
         TAG_NAMES="$REPO $REPO-$TIMESTAMP"
         [[ $DVER == 7 ]] && TAG_PREFIXES+=('')
-        [[ $REPO == 'testing' ]] && TAG_NAMES="$TAG_NAMES fresh $TIMESTAMP"
+        [[ $REPO == 'testing' ]] && [[ $SERIES == '3.5' ]] && TAG_NAMES="$TAG_NAMES fresh $TIMESTAMP"
         tag_list=''
         for tag_prefix in "${TAG_PREFIXES[@]}"; do
             for base in $TAG_NAMES; do
