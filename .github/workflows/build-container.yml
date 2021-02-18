@@ -25,6 +25,7 @@ jobs:
       matrix:
         dver: ['7', '8']
         repo: ['development', 'testing', 'release']
+        series: ['3.5', '3.6']
     needs: make-date-tag
     steps:
     - name: checkout docker-software-base
@@ -34,20 +35,16 @@ jobs:
       env:
         DVER: ${{ matrix.dver }}
         REPO: ${{ matrix.repo }}
+        SERIES: ${{ matrix series }}
         TIMESTAMP: ${{ needs.make-date-tag.outputs.dtag }}
       run: |
-        TAG_PREFIXES=("el$DVER-")
-        TAG_NAMES="$REPO $REPO-$TIMESTAMP"
-        [[ $DVER == 7 ]] && TAG_PREFIXES+=('')
-        [[ $REPO == 'testing' ]] && TAG_NAMES="$TAG_NAMES fresh $TIMESTAMP"
-        tag_list=''
-        for tag_prefix in "${TAG_PREFIXES[@]}"; do
-            for base in $TAG_NAMES; do
-                tag="${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}:$tag_prefix$base"
-                tag_list="${tag_list}${tag_list:+,}${tag}"
-            done
-        done
-        echo "::set-output name=taglist::$tag_list"
+        IMAGE_REPO="${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}"
+        tags=( $IMAGE_REPO:$SERIES-el$DVER-$REPO{,-$TIMESTAMP} )
+        if [[ $SERIES-el$DVER-$REPO = 3.5-el7-testing ]]; then
+            tags+=( $IMAGE_REPO:{fresh,$TIMESTAMP} )
+        fi
+        tag_list=$(IFS=,; echo "${tags[*]}")
+        echo "::set-output name=taglist::${tag_list}"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
