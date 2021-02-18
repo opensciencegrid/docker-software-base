@@ -35,7 +35,7 @@ jobs:
       env:
         DVER: ${{ matrix.dver }}
         REPO: ${{ matrix.repo }}
-        SERIES: ${{ matrix series }}
+        SERIES: ${{ matrix.series }}
         TIMESTAMP: ${{ needs.make-date-tag.outputs.dtag }}
       run: |
         IMAGE_REPO="${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}"
