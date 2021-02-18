@@ -38,19 +38,19 @@ jobs:
         TIMESTAMP: ${{ needs.make-date-tag.outputs.dtag }}
       run: |
         IMAGE_REPO="${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}"
-        TAG_PREFIXES=("$SERIES-el$DVER-")
-        TAG_NAMES="$REPO $REPO-$TIMESTAMP"
+        TAG_PREFIXES=("{$SERIES}-el{$DVER}-")
+        TAG_NAMES="${REPO} ${REPO}-${TIMESTAMP}"
         tag_list=''
         for tag_prefix in "${TAG_PREFIXES[@]}"; do
-            for base in $TAG_NAMES; do
-                tag="${IMAGE_REPO}:$tag_prefix$base"
+            for base in ${TAG_NAMES}; do
+                tag="${IMAGE_REPO}:${tag_prefix}${base}"
                 tag_list="${tag_list}${tag_list:+,}${tag}"
             done
         done
         if [[ $DVER == 7 ]] && [[ $REPO == 'testing' ]] && [[ $SERIES == '3.5' ]]; then
             tag_list="${tag_list},$IMAGE_REPO:fresh,$IMAGE_REPO:$TIMESTAMP"
         fi
-        echo "::set-output name=taglist::$tag_list"
+        echo "::set-output name=taglist::${tag_list}"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
