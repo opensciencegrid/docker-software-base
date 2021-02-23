@@ -32,14 +32,11 @@ RUN \
         yum-config-manager --enable osg-${BASE_YUM_REPO}; \
     fi && \
     yum clean all && \
-    rm -rf /var/cache/yum/
-
-# Impatiently ignore the Yum mirrors
-RUN sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
-        /etc/yum.repos.d/osg{,-upcoming}-testing.repo
-
-RUN mkdir -p /etc/osg/image-config.d/
-RUN mkdir -p /etc/osg/image-cleanup.d/
+    rm -rf /var/cache/yum/ && \
+    # Impatiently ignore the Yum mirrors
+    sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+        /etc/yum.repos.d/osg{,-upcoming}-testing.repo && \
+    mkdir -p /etc/osg/image-{cleanup,config}.d/
 
 COPY supervisord_startup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
