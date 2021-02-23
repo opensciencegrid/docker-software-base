@@ -40,6 +40,9 @@ RUN sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
 
 RUN mkdir -p /etc/osg/image-config.d/
 COPY image-config.d/* /etc/osg/image-config.d/
+
+RUN mkdir -p /etc/osg/image-cleanup.d/
+
 COPY supervisord_startup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
