@@ -36,7 +36,9 @@ RUN \
     # Impatiently ignore the Yum mirrors
     sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
         /etc/yum.repos.d/osg{,-upcoming}-testing.repo && \
-    mkdir -p /etc/osg/image-{cleanup,config}.d/
+    mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
+    # Support old init script dir name
+    ln -s /etc/osg/image-{init,config}.d
 
 COPY supervisord_startup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/

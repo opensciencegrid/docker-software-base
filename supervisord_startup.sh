@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Allow the derived images to run any additional runtime customizations
-for x in /etc/osg/image-config.d/*.sh; do source "$x"; done
+for x in /etc/osg/image-init.d/*.sh; do source "$x"; done
 
 # Allow child images to add cleanup customizations
 function source_cleanup {
