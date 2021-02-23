@@ -39,9 +39,9 @@ RUN sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
         /etc/yum.repos.d/osg{,-upcoming}-testing.repo
 
 RUN mkdir -p /etc/osg/image-config.d/
-ADD image-config.d/* /etc/osg/image-config.d/
-ADD supervisord_startup.sh /usr/local/sbin/
-ADD supervisord.conf /etc/
-ADD update-certs-rpms-if-present.sh /etc/cron.hourly/
+COPY image-config.d/* /etc/osg/image-config.d/
+COPY supervisord_startup.sh /usr/local/sbin/
+COPY supervisord.conf /etc/
+COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
