@@ -39,8 +39,6 @@ RUN sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
         /etc/yum.repos.d/osg{,-upcoming}-testing.repo
 
 RUN mkdir -p /etc/osg/image-config.d/
-COPY image-config.d/* /etc/osg/image-config.d/
-
 RUN mkdir -p /etc/osg/image-cleanup.d/
 
 COPY supervisord_startup.sh /usr/local/sbin/
