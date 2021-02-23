@@ -35,7 +35,7 @@ RUN \
     rm -rf /var/cache/yum/ && \
     # Impatiently ignore the Yum mirrors
     sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
-        /etc/yum.repos.d/osg{,-upcoming}-testing.repo && \
+        /etc/yum.repos.d/osg*.repo && \
     mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
     # Support old init script dir name
     ln -s /etc/osg/image-{init,config}.d
