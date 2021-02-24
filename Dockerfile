@@ -32,16 +32,16 @@ RUN \
         yum-config-manager --enable osg-${BASE_YUM_REPO}; \
     fi && \
     yum clean all && \
-    rm -rf /var/cache/yum/
+    rm -rf /var/cache/yum/ && \
+    # Impatiently ignore the Yum mirrors
+    sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+        /etc/yum.repos.d/osg*.repo && \
+    mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
+    # Support old init script dir name
+    ln -s /etc/osg/image-{init,config}.d
 
-# Impatiently ignore the Yum mirrors
-RUN sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
-        /etc/yum.repos.d/osg{,-upcoming}-testing.repo
-
-RUN mkdir -p /etc/osg/image-config.d/
-ADD image-config.d/* /etc/osg/image-config.d/
-ADD supervisord_startup.sh /usr/local/sbin/
-ADD supervisord.conf /etc/
-ADD update-certs-rpms-if-present.sh /etc/cron.hourly/
+COPY supervisord_startup.sh /usr/local/sbin/
+COPY supervisord.conf /etc/
+COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
