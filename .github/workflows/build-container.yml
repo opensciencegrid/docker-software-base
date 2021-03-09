@@ -78,6 +78,7 @@ jobs:
         - docker-htcondor-ce
         - docker-xcache
         - gratia-probe
+        - osgvo-docker-pilot
     steps:
 
     - name: dispatch build ${{ matrix.dispatch-repo }}
