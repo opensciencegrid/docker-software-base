@@ -6,6 +6,8 @@ on:
       - master
   schedule:
     - cron: '7 0 * * sun'
+  repository_dispatch:
+    types: [dispatch-build]
 
 jobs:
   make-date-tag:
