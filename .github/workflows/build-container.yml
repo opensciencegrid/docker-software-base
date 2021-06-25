@@ -80,6 +80,7 @@ jobs:
         - docker-hosted-ce
         - docker-htcondor-ce
         - docker-xcache
+        - docker-xrootd-standalone
         - gratia-probe
         - osgvo-docker-pilot
     steps:
