@@ -77,8 +77,6 @@ jobs:
         dispatch-repo:
         - docker-compute-entrypoint
         - docker-frontier-squid
-        - docker-hosted-ce
-        - docker-htcondor-ce
         - docker-xcache
         - docker-xrootd-standalone
         - gratia-probe
