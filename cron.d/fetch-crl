@@ -1,0 +1,1 @@
+45 */6 * * * root /usr/sbin/fetch-crl -p 5 -r 360 > /var/log/fetch-crl 2>&1
