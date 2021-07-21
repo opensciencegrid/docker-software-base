@@ -78,6 +78,7 @@ jobs:
         - docker-xcache
         - docker-xrootd-standalone
         - gratia-probe
+        - osg-repo-scripts
         - osgvo-docker-pilot
     steps:
 
