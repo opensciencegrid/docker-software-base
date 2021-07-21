@@ -44,5 +44,6 @@ COPY supervisord_startup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
 COPY cron.d/* /etc/cron.d/
+RUN chmod go-w /etc/cron.d/* /etc/cron.hourly/* /etc/supervisord.conf /usr/local/sbin/*
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
