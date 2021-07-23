@@ -9,6 +9,8 @@ function source_cleanup {
 }
 trap source_cleanup EXIT TERM QUIT
 
+chmod go-w /etc/cron.*/*
+
 # Now we can actually start the supervisor
 exec /usr/bin/supervisord -c /etc/supervisord.conf
 
