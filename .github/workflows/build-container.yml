@@ -78,8 +78,10 @@ jobs:
         - docker-xcache
         - docker-xrootd-standalone
         - gratia-probe
+        - open-science-pool-registry
         - osg-repo-scripts
         - osgvo-docker-pilot
+
     steps:
 
     - name: dispatch build ${{ matrix.dispatch-repo }}
