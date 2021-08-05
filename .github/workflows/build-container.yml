@@ -44,9 +44,10 @@ jobs:
         docker_repo=${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}
         tag_list=()
         for registry in hub.opensciencegrid.org docker.io; do
-          for image_tag in "$REPO" "$REPO-$TIMESTAMP"; do
-            tag_list+=("$registry/$docker_repo":"$image_tag")
-          done
+          tag_list+=( $registry/$docker_repo:$SERIES-el$DVER-$REPO{,-$TIMESTAMP} )
+          if [[ $SERIES-el$DVER-$REPO = 3.5-el7-testing ]]; then
+            tags+=( $registry/$docker_repo:{fresh,$TIMESTAMP} )
+        fi
         done
         # This causes the tag_list array to be comma-separated below,
         # which is required for build-push-action
