@@ -73,6 +73,7 @@ jobs:
     - name: Build and push Docker images
       uses: docker/build-push-action@v2.2.0
       with:
+        context: .
         push: true
         build-args: |
           IMAGE_BASE_TAG=centos${{ matrix.dver }}
