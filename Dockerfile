@@ -29,7 +29,9 @@ RUN \
         yum-config-manager --enable powertools; \
     fi && \
     if [[ $BASE_YUM_REPO != "release" ]]; then \
-        yum-config-manager --enable osg-${BASE_YUM_REPO}; \
+        yum-config-manager --enable osg-${BASE_YUM_REPO} \
+        yum-config-manager --enable osg-upcoming-${BASE_YUM_REPO}; else \
+        yum-config-manager --enable osg-upcoming; \
     fi && \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
