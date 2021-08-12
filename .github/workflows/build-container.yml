@@ -40,9 +40,9 @@ jobs:
         TIMESTAMP: ${{ needs.make-date-tag.outputs.dtag }}
       run: |
         docker_repo=${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}
-        tag_list=()
+        tags=()
         for registry in hub.opensciencegrid.org docker.io; do
-          tag_list+=( $registry/$docker_repo:$SERIES-el$DVER-$REPO{,-$TIMESTAMP} )
+          tags+=( $registry/$docker_repo:$SERIES-el$DVER-$REPO{,-$TIMESTAMP} )
           if [[ $SERIES-el$DVER-$REPO = 3.5-el7-testing ]]; then
             tags+=( $registry/$docker_repo:{fresh,$TIMESTAMP} )
         fi
