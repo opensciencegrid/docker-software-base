@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Allow the derived images to run any additional runtime customizations
+shopt -s nullglob
 for x in /etc/osg/image-init.d/*.sh; do source "$x"; done
+shopt -u nullglob
 
 # Allow child images to add cleanup customizations
 function source_cleanup {
