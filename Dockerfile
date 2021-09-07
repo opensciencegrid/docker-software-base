@@ -43,7 +43,9 @@ RUN \
     ln -s /etc/osg/image-{init,config}.d
 
 COPY supervisord_startup.sh /usr/local/sbin/
+COPY container_cleanup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
+COPY 00-cleanup.conf /etc/supervisord.d/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
 COPY cron.d/* /etc/cron.d/
 RUN chmod go-w /etc/supervisord.conf /usr/local/sbin/* /etc/cron.*/*
