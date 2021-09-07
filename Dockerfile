@@ -24,7 +24,7 @@ RUN \
     yum -y install http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${IMAGE_BASE_TAG#centos}-release-latest.rpm \
                    epel-release \
                    $YUM_PKG_NAME && \
-    yum -y install supervisor cronie fetch-crl osg-ca-certs && \
+    yum -y install supervisor cronie fetch-crl osg-ca-certs which less && \
     if [[ $IMAGE_BASE_TAG != centos7 ]]; then \
         yum-config-manager --enable powertools; \
     fi && \
