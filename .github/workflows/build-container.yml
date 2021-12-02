@@ -88,13 +88,13 @@ jobs:
         dispatch-repo:
         - docker-compute-entrypoint
         - docker-frontier-squid
+        - docker-ospool-cm
         - docker-xcache
         - docker-xrootd-standalone
         - gratia-probe
         - open-science-pool-registry
         - osg-repo-scripts
         - osgvo-docker-pilot
-        - docker-ospool-cm
 
     steps:
 
