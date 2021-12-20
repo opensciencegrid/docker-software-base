@@ -12,7 +12,7 @@ LABEL maintainer OSG Software <help@opensciencegrid.org>
 
 RUN \
     # Attempt to grab the major version from the tag
-    DVER=$(egrep -o '[0-9][\.0-9]*$' <<< "$IMAGE_BASE" | cut -c1); \
+    DVER=$(egrep -o '[0-9][\.0-9]*$' <<< "$IMAGE_BASE" | cut -d. -f1); \
     if  [[ $DVER == 7 ]]; then \
        YUM_PKG_NAME="yum-plugin-priorities"; \
        yum-config-manager \
