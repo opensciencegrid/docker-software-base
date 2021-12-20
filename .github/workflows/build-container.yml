@@ -62,7 +62,7 @@ jobs:
           7) image_base="docker.io/centos:centos7";;
           *) echo "Unknown distro version: $DVER"; exit 1;;
         esac
-        echo ":::set-output name=imagebase::${image_base}"
+        echo "::set-output name=imagebase::${image_base}"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
