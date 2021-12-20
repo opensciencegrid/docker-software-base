@@ -54,7 +54,7 @@ jobs:
 
     - id: generate-image-base
       env:
-        DVER: ${{ matrix.dver}}
+        DVER: ${{ matrix.dver }}
       run: |
         case "$DVER" in
           8) image_base="quay.io/centos/centos:stream8";;
