@@ -52,6 +52,17 @@ jobs:
         tag_list=$(IFS=,; echo "${tags[*]}")
         echo "::set-output name=taglist::${tag_list}"
 
+    - id: generate-image-base
+      env:
+        DVER: ${{ matrix.dver}}
+      run: |
+        case "$DVER" in
+          8) image_base="quay.io/centos/centos:stream8";;
+          7) image_base="docker.io/centos:centos7";;
+          *) echo "Unknown distro version: $DVER"; exit 1;;
+        esac
+        echo ":::set-output name=imagebase::${image_base}"
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
@@ -74,7 +85,7 @@ jobs:
         context: .
         push: true
         build-args: |
-          IMAGE_BASE_TAG=centos${{ matrix.dver }}
+          IMAGE_BASE=${{ steps.generate-image-base.outputs.imagebase }}
           BASE_YUM_REPO=${{ matrix.repo }}
           OSG_RELEASE=${{ matrix.series }}
         tags: "${{ steps.generate-tag-list.outputs.taglist }}"
