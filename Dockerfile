@@ -1,17 +1,19 @@
-# Default to EL7 builds
-ARG IMAGE_BASE_TAG=centos7
+# Default to EL8 builds
+ARG IMAGE_BASE=quay.io/centos/centos:stream8
 
-FROM centos:$IMAGE_BASE_TAG
+FROM $IMAGE_BASE
 
-# "ARG IMAGE_BASE_TAG" needs to be here again because the previous instance has gone out of scope.
-ARG IMAGE_BASE_TAG=centos7
+# "ARG IMAGE_BASE" needs to be here again because the previous instance has gone out of scope.
+ARG IMAGE_BASE=quay.io/centos/centos:stream8
 ARG BASE_YUM_REPO=testing
 ARG OSG_RELEASE=3.5
 
 LABEL maintainer OSG Software <help@opensciencegrid.org>
 
 RUN \
-    if  [[ $IMAGE_BASE_TAG == centos7 ]]; then \
+    # Attempt to grab the major version from the tag
+    DVER=$(egrep -o '[0-9][\.0-9]*$' <<< "$IMAGE_BASE" | cut -d. -f1); \
+    if  [[ $DVER == 7 ]]; then \
        YUM_PKG_NAME="yum-plugin-priorities"; \
        yum-config-manager \
          --setopt=skip_missing_names_on_install=False \
@@ -21,11 +23,11 @@ RUN \
        YUM_PKG_NAME="yum-utils"; \
     fi && \
     yum update -y && \
-    yum -y install http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${IMAGE_BASE_TAG#centos}-release-latest.rpm \
+    yum -y install http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${DVER}-release-latest.rpm \
                    epel-release \
                    $YUM_PKG_NAME && \
     yum -y install supervisor cronie fetch-crl osg-ca-certs which less && \
-    if [[ $IMAGE_BASE_TAG != centos7 ]]; then \
+    if [[ $DVER == 7 ]]; then \
         yum-config-manager --enable powertools; \
     fi && \
     if [[ $BASE_YUM_REPO != "release" ]]; then \
