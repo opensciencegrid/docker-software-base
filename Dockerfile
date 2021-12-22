@@ -42,6 +42,9 @@ RUN \
     # Support old init script dir name
     ln -s /etc/osg/image-{init,config}.d
 
+COPY bin/pkg-cmp-between.sh               /usr/local/bin
+COPY bin/pkg-cmp-gt.sh                    /usr/local/bin
+COPY bin/pkg-cmp-lt.sh                    /usr/local/bin
 COPY supervisord_startup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
