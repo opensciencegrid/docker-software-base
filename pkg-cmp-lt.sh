@@ -15,7 +15,7 @@ if [[ $# -ne 2 ]]; then
 fi
 
 RPM_EVR=$(rpm -q --queryformat '%{EPOCH}:%{VERSION}-%{RELEASE}\n' $RPM) # get EVR of the RPM
-RPM_EVR=${RPM_VER/(none)/0} # no epoch will print (none) for the epoch field so we change it to 0
+RPM_EVR=${RPM_EVR/(none)/0} # no epoch will print (none) for the epoch field so we change it to 0
 
 rpmdev-vercmp RPM_EVR EVR # check if RPM is older than the EVR
 if [[ $? == 12 ]]; then
