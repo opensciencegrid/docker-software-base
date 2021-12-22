@@ -10,9 +10,9 @@ EVR1=$2
 EVR2=$3
 
 if [[ $# -ne 3 ]]; then
-    echo "Expected 3 args, got $#"
-    echo "$USAGE"
-    exit
+    echo "Expected 3 args, got $#" >&2
+    echo "$USAGE" >&2
+    exit 2
 fi
 
 RPM_EVR=$(rpm -q --queryformat '%{EPOCH}:%{VERSION}-%{RELEASE}\n' $RPM) # get EVR of the RPM
