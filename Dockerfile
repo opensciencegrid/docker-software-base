@@ -27,7 +27,7 @@ RUN \
                    epel-release \
                    $YUM_PKG_NAME && \
     yum -y install supervisor cronie fetch-crl osg-ca-certs which less && \
-    if [[ $DVER == 7 ]]; then \
+    if [[ $DVER == 8 ]]; then \
         yum-config-manager --enable powertools; \
     fi && \
     if [[ $BASE_YUM_REPO != "release" ]]; then \
