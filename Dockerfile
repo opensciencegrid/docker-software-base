@@ -44,6 +44,7 @@ RUN \
     # Support old init script dir name
     ln -s /etc/osg/image-{init,config}.d
 
+COPY bin/* /usr/local/bin
 COPY supervisord_startup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
