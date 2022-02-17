@@ -108,6 +108,7 @@ jobs:
         - open-science-pool-registry
         - osg-repo-scripts
         - osgvo-docker-pilot
+        - images
 
     steps:
 
