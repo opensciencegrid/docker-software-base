@@ -26,7 +26,12 @@ RUN \
     yum -y install http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${DVER}-release-latest.rpm \
                    epel-release \
                    $YUM_PKG_NAME && \
-    yum -y install supervisor cronie fetch-crl osg-ca-certs which less && \
+    yum -y install supervisor \
+                   cronie \
+                   fetch-crl \
+                   osg-ca-certs \
+                   which \
+                   less && \
     if [[ $DVER == 8 ]]; then \
         yum-config-manager --enable powertools; \
     fi && \
