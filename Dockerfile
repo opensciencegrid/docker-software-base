@@ -31,7 +31,8 @@ RUN \
                    fetch-crl \
                    osg-ca-certs \
                    which \
-                   less && \
+                   less \
+                   rpmdevtools && \
     if [[ $DVER == 8 ]]; then \
         yum-config-manager --enable powertools; \
     fi && \
