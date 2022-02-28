@@ -99,11 +99,7 @@ jobs:
       matrix:
         dispatch-repo:
         - docker-compute-entrypoint
-        - docker-frontier-squid
-        - docker-oidc-agent
-        - docker-ospool-cm
         - docker-xcache
-        - docker-xrootd-standalone
         - gratia-probe
         - open-science-pool-registry
         - osg-repo-scripts
