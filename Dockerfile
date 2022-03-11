@@ -50,7 +50,10 @@ RUN \
     # Support old init script dir name
     ln -s /etc/osg/image-{init,config}.d
 
-COPY bin/* /usr/local/bin
+RUN GOCROND_VERSION=21.5.0 && curl -s -L -o /usr/local/bin/go-crond \
+       https://github.com/webdevops/go-crond/releases/download/$GOCROND_VERSION/go-crond-64\-linux && \
+    chmod +x /usr/local/bin/go-crond
+COPY bin/* /usr/local/bin/
 COPY supervisord_startup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
