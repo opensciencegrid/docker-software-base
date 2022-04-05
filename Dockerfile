@@ -33,6 +33,7 @@ RUN \
                    which \
                    less \
                    rpmdevtools && \
+                   /usr/bin/ps && \
     if [[ $DVER == 8 ]]; then \
         yum-config-manager --enable powertools; \
     fi && \
