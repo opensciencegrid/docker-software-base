@@ -26,7 +26,7 @@ jobs:
       matrix:
         dver: ['7', '8']
         repo: ['development', 'testing', 'release']
-        series: ['3.5', '3.6']
+        series: ['3.6']
     needs: make-date-tag
     steps:
     - name: checkout docker-software-base
@@ -43,9 +43,6 @@ jobs:
         tags=()
         for registry in hub.opensciencegrid.org docker.io; do
           tags+=( $registry/$docker_repo:$SERIES-el$DVER-$REPO{,-$TIMESTAMP} )
-          if [[ $SERIES-el$DVER-$REPO = 3.5-el7-testing ]]; then
-            tags+=( $registry/$docker_repo:{fresh,$TIMESTAMP} )
-        fi
         done
         # This causes the tag_list array to be comma-separated below,
         # which is required for build-push-action
