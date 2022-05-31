@@ -98,6 +98,7 @@ jobs:
         - docker-compute-entrypoint
         - docker-xcache
         - gratia-probe
+        - htcondor-autoscale-manager
         - open-science-pool-registry
         - osg-repo-scripts
         - osgvo-docker-pilot
