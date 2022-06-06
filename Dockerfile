@@ -36,7 +36,8 @@ RUN \
                    /usr/bin/ps \
                    && \
     if [[ $DVER == 8 ]]; then \
-        yum-config-manager --enable powertools; \
+        yum-config-manager --enable powertools && \
+        yum-config-manager --setopt=install_weak_deps=False --save > /dev/null; \
     fi && \
     if [[ $BASE_YUM_REPO != "release" ]]; then \
         yum-config-manager --enable osg-${BASE_YUM_REPO}; \
