@@ -24,7 +24,15 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        dver: ['7', '8']
+        base:
+          - image: 'docker.io/centos:centos7'
+            tag_str: 'el7'
+          - image: 'quay.io/centos/centos:stream8'
+            tag_str: 'el8'
+          - image: 'quay.io/almalinux/almalinux:8'
+            tag_str: 'al8'
+          - image: 'quay.io/almalinux/almalinux:9'
+            tag_str: 'al9'
         repo: ['development', 'testing', 'release']
         series: ['3.6']
     needs: make-date-tag
@@ -34,7 +42,7 @@ jobs:
 
     - id: generate-tag-list
       env:
-        DVER: ${{ matrix.dver }}
+        BASE_STR: ${{ matrix.base.tag_str }}
         REPO: ${{ matrix.repo }}
         SERIES: ${{ matrix.series }}
         TIMESTAMP: ${{ needs.make-date-tag.outputs.dtag }}
@@ -42,24 +50,12 @@ jobs:
         docker_repo=${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}
         tags=()
         for registry in hub.opensciencegrid.org docker.io; do
-          tags+=( $registry/$docker_repo:$SERIES-el$DVER-$REPO{,-$TIMESTAMP} )
+          tags+=( $registry/$docker_repo:$SERIES-$BASE_STR-$REPO{,-$TIMESTAMP} )
         done
         # This causes the tag_list array to be comma-separated below,
         # which is required for build-push-action
         tag_list=$(IFS=,; echo "${tags[*]}")
         echo "::set-output name=taglist::${tag_list}"
-
-    - id: generate-image-base
-      env:
-        DVER: ${{ matrix.dver }}
-      run: |
-        case "$DVER" in
-          9) image_base="quay.io/centos/centos:stream9";;
-          8) image_base="quay.io/centos/centos:stream8";;
-          7) image_base="docker.io/centos:centos7";;
-          *) echo "Unknown distro version: $DVER"; exit 1;;
-        esac
-        echo "::set-output name=imagebase::${image_base}"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
@@ -83,7 +79,7 @@ jobs:
         context: .
         push: true
         build-args: |
-          IMAGE_BASE=${{ steps.generate-image-base.outputs.imagebase }}
+          IMAGE_BASE=${{ matrix.base.image }}
           BASE_YUM_REPO=${{ matrix.repo }}
           OSG_RELEASE=${{ matrix.series }}
         tags: "${{ steps.generate-tag-list.outputs.taglist }}"
