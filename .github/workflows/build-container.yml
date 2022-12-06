@@ -31,8 +31,6 @@ jobs:
             tag_str: 'el8'
           - image: 'quay.io/almalinux/almalinux:8'
             tag_str: 'al8'
-          - image: 'quay.io/almalinux/almalinux:9'
-            tag_str: 'al9'
         repo: ['development', 'testing', 'release']
         series: ['3.6']
     needs: make-date-tag
