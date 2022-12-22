@@ -53,7 +53,7 @@ RUN \
     # Support old init script dir name
     ln -s /etc/osg/image-{init,config}.d
 
-COPY bin/* /usr/local/bin
+COPY bin/* /usr/local/bin/
 COPY supervisord_startup.sh /usr/local/sbin/
 COPY container_cleanup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
