@@ -49,6 +49,9 @@ RUN \
     # Impatiently ignore the Yum mirrors
     sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
         /etc/yum.repos.d/osg*.repo && \
+    # Disable gpgcheck for devops, till we get them rebuilt for SOFTWARE-5422
+    sed -i 's/gpgcheck=1/gpgcheck=0/' \
+        /etc/yum.repos.d/devops*.repo && \
     mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
     # Support old init script dir name
     ln -s /etc/osg/image-{init,config}.d
