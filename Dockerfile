@@ -26,15 +26,6 @@ RUN \
     yum -y install http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${DVER}-release-latest.rpm \
                    epel-release \
                    $YUM_PKG_NAME && \
-    yum -y install supervisor \
-                   cronie \
-                   fetch-crl \
-                   osg-ca-certs \
-                   which \
-                   less \
-                   rpmdevtools \
-                   /usr/bin/ps \
-                   && \
     if [[ $DVER == 8 ]]; then \
         yum-config-manager --enable powertools && \
         yum-config-manager --setopt=install_weak_deps=False --save > /dev/null; \
@@ -44,6 +35,15 @@ RUN \
         yum-config-manager --enable osg-upcoming-${BASE_YUM_REPO}; else \
         yum-config-manager --enable osg-upcoming; \
     fi && \
+    yum -y install supervisor \
+                   cronie \
+                   fetch-crl \
+                   osg-ca-certs \
+                   which \
+                   less \
+                   rpmdevtools \
+                   /usr/bin/ps \
+                   && \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
     # Impatiently ignore the Yum mirrors
