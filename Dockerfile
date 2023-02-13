@@ -6,7 +6,7 @@ FROM $IMAGE_BASE
 # "ARG IMAGE_BASE" needs to be here again because the previous instance has gone out of scope.
 ARG IMAGE_BASE=quay.io/centos/centos:stream8
 ARG BASE_YUM_REPO=testing
-ARG OSG_RELEASE=3.5
+ARG OSG_RELEASE=3.6
 
 LABEL maintainer OSG Software <help@opensciencegrid.org>
 
