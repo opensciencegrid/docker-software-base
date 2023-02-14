@@ -30,6 +30,10 @@ RUN \
         yum-config-manager --enable powertools && \
         yum-config-manager --setopt=install_weak_deps=False --save > /dev/null; \
     fi && \
+    if [[ $DVER == 9 ]]; then \
+        yum-config-manager --enable crb && \
+        yum-config-manager --setopt=install_weak_deps=False --save > /dev/null; \
+    fi && \
     if [[ $BASE_YUM_REPO != "release" ]]; then \
         yum-config-manager --enable osg-${BASE_YUM_REPO}; \
         yum-config-manager --enable osg-upcoming-${BASE_YUM_REPO}; else \
