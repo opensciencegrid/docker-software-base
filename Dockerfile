@@ -46,6 +46,7 @@ RUN \
                    which \
                    less \
                    rpmdevtools \
+                   fakeroot \
                    /usr/bin/ps \
                    && \
     yum clean all && \
@@ -62,6 +63,7 @@ RUN \
 
 COPY bin/* /usr/local/bin/
 COPY supervisord_startup.sh /usr/local/sbin/
+COPY crond_startup.sh /usr/local/sbin/
 COPY container_cleanup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
 COPY 00-cleanup.conf /etc/supervisord.d/
