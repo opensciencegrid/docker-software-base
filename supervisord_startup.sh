@@ -8,5 +8,6 @@ shopt -u nullglob
 chmod go-w /etc/cron.*/* 2>/dev/null || :
 
 # Now we can actually start the supervisor
-exec /usr/bin/supervisord -c /etc/supervisord.conf
+# Use whatever user id this container as run as
+exec /usr/bin/supervisord -c /etc/supervisord.conf -u $(id -u)
 

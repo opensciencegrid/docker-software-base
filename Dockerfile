@@ -46,6 +46,7 @@ RUN \
                    which \
                    less \
                    rpmdevtools \
+                   fakeroot \
                    /usr/bin/ps \
                    && \
     yum clean all && \
@@ -62,11 +63,14 @@ RUN \
 
 COPY bin/* /usr/local/bin/
 COPY supervisord_startup.sh /usr/local/sbin/
+COPY crond_startup.sh /usr/local/sbin/
 COPY container_cleanup.sh /usr/local/sbin/
 COPY supervisord.conf /etc/
 COPY 00-cleanup.conf /etc/supervisord.d/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
 COPY cron.d/* /etc/cron.d/
 RUN chmod go-w /etc/supervisord.conf /usr/local/sbin/* /etc/cron.*/*
+# For OKD, which runs as non-root user and root group
+RUN chmod g+w /var/log /var/log/supervisor /var/run
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
