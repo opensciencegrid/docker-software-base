@@ -22,7 +22,7 @@ RUN \
     else \
        YUM_PKG_NAME="yum-utils"; \
     fi && \
-    yum update -y && \
+    yum distro-sync -y && \
     yum -y install http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${DVER}-release-latest.rpm \
                    epel-release \
                    $YUM_PKG_NAME && \
