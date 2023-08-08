@@ -49,6 +49,9 @@ RUN \
                    fakeroot \
                    /usr/bin/ps \
                    && \
+    if [[ $DVER == 8 ]]; then \
+        yum -y install crypto-policies-scripts; \
+    fi && \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
     # Impatiently ignore the Yum mirrors
