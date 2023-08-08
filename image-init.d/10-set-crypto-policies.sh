@@ -29,7 +29,7 @@ if command -v update-crypto-policies &>/dev/null; then
             update-crypto-policies --set DEFAULT >/dev/null
             ;;
     esac
-    echo -n "System crypto policies are:"
+    echo -n "System crypto policies are: "
     update-crypto-policies --show
 fi
 
