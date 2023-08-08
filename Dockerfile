@@ -49,6 +49,9 @@ RUN \
                    fakeroot \
                    /usr/bin/ps \
                    && \
+    if [[ $DVER == 8 ]]; then \
+        yum -y install crypto-policies-scripts; \
+    fi && \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
     # Impatiently ignore the Yum mirrors
@@ -69,8 +72,14 @@ COPY supervisord.conf /etc/
 COPY 00-cleanup.conf /etc/supervisord.d/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
 COPY cron.d/* /etc/cron.d/
+COPY image-init.d/* /etc/osg/image-init.d/
 RUN chmod go-w /etc/supervisord.conf /usr/local/sbin/* /etc/cron.*/*
 # For OKD, which runs as non-root user and root group
 RUN chmod g+w /var/log /var/log/supervisor /var/run
+
+# Allow use of SHA1 certificates.
+# Accepted values are "YES" (enable them, even on EL9), "NO" (disable them, even on EL8), "DEFAULT" (use OS default).
+# No effect on EL7.
+ENV ENABLE_SHA1=DEFAULT
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
