@@ -23,7 +23,12 @@ RUN \
        YUM_PKG_NAME="yum-utils"; \
     fi && \
     yum distro-sync -y && \
-    yum -y install http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${DVER}-release-latest.rpm \
+    if [[ $OSG_RELEASE =~ ^[0-9][0-9]$ ]]; then \
+       OSG_URL=http://repo.opensciencegrid.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm; \
+    else \
+       OSG_URL=http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${DVER}-release-latest.rpm; \
+    fi && \
+    yum -y install $OSG_URL \
                    epel-release \
                    $YUM_PKG_NAME && \
     if [[ $DVER == 8 ]]; then \
@@ -58,8 +63,10 @@ RUN \
     sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
         /etc/yum.repos.d/osg*.repo && \
     # Disable gpgcheck for devops, till we get them rebuilt for SOFTWARE-5422
-    sed -i 's/gpgcheck=1/gpgcheck=0/' \
-        /etc/yum.repos.d/devops*.repo && \
+    if [[ $OSG_RELEASE == "3.6" ]]; then \
+       sed -i 's/gpgcheck=1/gpgcheck=0/' \
+              /etc/yum.repos.d/devops*.repo; \
+    fi && \
     mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
     # Support old init script dir name
     ln -s /etc/osg/image-{init,config}.d
