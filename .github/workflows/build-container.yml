@@ -88,6 +88,7 @@ jobs:
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v4
+      continue-on-error: ${{ matrix.repo == 'development' && matrix.series == '23' }}
       with:
         context: .
         push: true
