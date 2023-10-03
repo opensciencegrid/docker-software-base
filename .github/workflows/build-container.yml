@@ -38,15 +38,10 @@ jobs:
         repo: ['development', 'testing', 'release']
         series: ['3.6', '23']
         # Exclude EL7 for OSG 23 builds
-        # FIXME: exclude testing and release for OSG 23 builds
         exclude:
           # exclude/include for nested dict items have to use the dict form
           # https://github.com/actions/runner/issues/1512
           - base: {image: 'docker.io/centos:centos7', tag_str: 'el7'}
-            series: '23'
-          - repo: 'testing'
-            series: '23'
-          - repo: 'release'
             series: '23'
     needs: make-date-tag
     steps:
@@ -88,6 +83,7 @@ jobs:
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v4
+      continue-on-error: ${{ matrix.repo == 'development' && matrix.series == '23' }}
       with:
         context: .
         push: true
