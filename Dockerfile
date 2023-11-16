@@ -8,7 +8,7 @@ ARG IMAGE_BASE=quay.io/centos/centos:stream8
 ARG BASE_YUM_REPO=testing
 ARG OSG_RELEASE=3.6
 
-LABEL maintainer OSG Software <help@opensciencegrid.org>
+LABEL maintainer OSG Software <help@osg-htc.org>
 
 RUN \
     # Attempt to grab the major version from the tag
