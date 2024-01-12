@@ -57,6 +57,13 @@ RUN \
     if [[ $DVER == 8 ]]; then \
         yum -y install crypto-policies-scripts; \
     fi && \
+    # avoid a known bad version of condor (23.4.0-0.702484) \
+    # FIXME this code can be removed once that version is gone or at least not the newest \
+    if [[ $OSG_RELEASE == 23 ]]; then \
+        # OSG 23 implies el8+ \
+        dnf -y install dnf-plugin-versionlock && \
+        dnf versionlock exclude "condor-0:23.4.0-0.702484*" --enablerepo="osg-upcoming*"; \
+    fi && \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
     # Impatiently ignore the Yum mirrors
