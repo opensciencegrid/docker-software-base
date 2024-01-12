@@ -58,7 +58,7 @@ RUN \
         yum -y install crypto-policies-scripts; \
     fi && \
     # avoid a known bad version of condor (23.4.0-0.702484) \
-    # this code can be removed once that version is gone or at least not the newest \
+    # FIXME this code can be removed once that version is gone or at least not the newest \
     if [[ $OSG_RELEASE == 23 ]]; then \
         # OSG 23 implies el8+ \
         dnf -y install dnf-plugin-versionlock && \
