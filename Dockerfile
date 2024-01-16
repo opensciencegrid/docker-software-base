@@ -11,7 +11,8 @@ ARG OSG_RELEASE=3.6
 LABEL maintainer OSG Software <help@osg-htc.org>
 
 RUN \
-    # Attempt to grab the major version from the tag
+    log () { printf "\n%s\t%s\n\n" "$(date '+%F %X %z')" "$*" ; } ; \
+    # Attempt to grab the major version from the tag \
     DVER=$(egrep -o '[0-9][\.0-9]*$' <<< "$IMAGE_BASE" | cut -d. -f1); \
     if  [[ $DVER == 7 ]]; then \
        YUM_PKG_NAME="yum-plugin-priorities"; \
@@ -22,12 +23,16 @@ RUN \
     else \
        YUM_PKG_NAME="yum-utils"; \
     fi && \
+    log "Updating OS YUM cache" && time \
+    yum makecache && \
+    log "Updating OS" && time \
     yum distro-sync -y && \
     if [[ $OSG_RELEASE =~ ^[0-9][0-9]$ ]]; then \
        OSG_URL=https://repo.opensciencegrid.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm; \
     else \
        OSG_URL=https://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${DVER}-release-latest.rpm; \
     fi && \
+    log "Installing EPEL/OSG repo packages" && time \
     yum -y install $OSG_URL \
                    epel-release \
                    $YUM_PKG_NAME && \
@@ -44,6 +49,9 @@ RUN \
         yum-config-manager --enable osg-upcoming-${BASE_YUM_REPO}; else \
         yum-config-manager --enable osg-upcoming; \
     fi && \
+    log "Updating EPEL/OSG YUM cache" && time \
+    yum makecache && \
+    log "Installing common software" && time \
     yum -y install supervisor \
                    cronie \
                    fetch-crl \
@@ -55,15 +63,19 @@ RUN \
                    /usr/bin/ps \
                    && \
     if [[ $DVER == 8 ]]; then \
+        log "Installing crypto-policies-scripts (EL8)" && time \
         yum -y install crypto-policies-scripts; \
     fi && \
     # avoid a known bad version of condor (23.4.0-0.702484) \
     # FIXME this code can be removed once that version is gone or at least not the newest \
     if [[ $OSG_RELEASE == 23 ]]; then \
         # OSG 23 implies el8+ \
+        log "Installing versionlock plugin" && time \
         dnf -y install dnf-plugin-versionlock && \
+        log "Adding versionlock" && time \
         dnf versionlock exclude "condor-0:23.4.0-0.702484*" --enablerepo="osg-upcoming*"; \
     fi && \
+    log "Cleaning up YUM metadata" && time \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
     # Impatiently ignore the Yum mirrors
