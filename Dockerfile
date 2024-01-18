@@ -66,14 +66,16 @@ RUN \
         log "Installing crypto-policies-scripts (EL8)" && time \
         yum -y install crypto-policies-scripts; \
     fi && \
-    # avoid a known bad version of condor (23.4.0-0.702484) \
-    # FIXME this code can be removed once that version is gone or at least not the newest \
+    # avoid condor 23.x release candidates and dailies until we get an all clear from the devs \
+    # FIXME this code can be removed once the bad versions are gone \
     if [[ $OSG_RELEASE == 23 ]]; then \
         # OSG 23 implies el8+ \
         log "Installing versionlock plugin" && time \
         dnf -y install dnf-plugin-versionlock && \
-        log "Adding versionlock" && time \
-        dnf versionlock exclude "condor-0:23.4.0-0.702484*" --enablerepo="osg-upcoming*"; \
+        log "Adding versionlock 1" && time \
+        dnf versionlock exclude "condor-0:23.4.*" --enablerepo="osg-upcoming*" && \
+        log "Adding versionlock 2" && time \
+        dnf versionlock exclude "condor-0:23.5.*" --enablerepo="osg-upcoming*"; \
     fi && \
     log "Cleaning up YUM metadata" && time \
     yum clean all && \
