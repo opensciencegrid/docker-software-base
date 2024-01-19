@@ -29,7 +29,7 @@ jobs:
             tag_str: 'el7'
           - image: 'quay.io/centos/centos:stream8'
             tag_str: 'el8'
-          - image: 'quay.io/almalinux/almalinux:8'
+          - image: 'docker.io/library/almalinux:8'
             tag_str: 'al8'
           - image: 'quay.io/almalinux/almalinux:9'
             tag_str: 'el9'
