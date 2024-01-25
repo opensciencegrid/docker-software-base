@@ -71,8 +71,19 @@ RUN \
     if [[ $OSG_RELEASE == 23 ]]; then \
         # OSG 23 implies el8+ \
         dnf -y install dnf-plugin-versionlock && \
-        dnf versionlock exclude "condor-0:23.4.*" --enablerepo="osg-upcoming*" && \
-        dnf versionlock exclude "condor-0:23.5.*" --enablerepo="osg-upcoming*"; \
+        # versionlock locks globs, not ranges so this is annoying \
+        # the issue got fixed in 23.4.0-0.706796 and 23.5.0-0.706930 \
+        # \
+        # handle 23.4.0 -- avoid [0.700000,0.706796): \
+        dnf versionlock exclude "condor-0:23.4.0-0.70[0-6]*" --enablerepo="osg-upcoming*" && \
+        dnf versionlock del     "condor-0:23.4.0-0.70679[6-9]*" \
+                                "condor-0:23.4.0-0.706[8-9]*" --enablerepo="osg-upcoming*" && \
+        # \
+        # handle 23.5.* -- avoid [0.70000,0.706930): \
+        dnf versionlock exclude "condor-0:23.5.0-0.70[0-6]*" --enablerepo="osg-upcoming*" && \
+        dnf versionlock del     "condor-0:23.5.0-0.7069[3-9]*" --enablerepo="osg-upcoming*" && \
+        # verify the results \
+        dnf versionlock list | sort; \
     fi && \
     log "Cleaning up YUM metadata" && time \
     yum clean all && \
