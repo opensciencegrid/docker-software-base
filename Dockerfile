@@ -70,11 +70,8 @@ RUN \
     # FIXME this code can be removed once the bad versions are gone \
     if [[ $OSG_RELEASE == 23 ]]; then \
         # OSG 23 implies el8+ \
-        log "Installing versionlock plugin" && time \
         dnf -y install dnf-plugin-versionlock && \
-        log "Adding versionlock 1" && time \
         dnf versionlock exclude "condor-0:23.4.*" --enablerepo="osg-upcoming*" && \
-        log "Adding versionlock 2" && time \
         dnf versionlock exclude "condor-0:23.5.*" --enablerepo="osg-upcoming*"; \
     fi && \
     log "Cleaning up YUM metadata" && time \
