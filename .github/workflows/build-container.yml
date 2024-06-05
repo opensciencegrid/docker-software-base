@@ -27,10 +27,8 @@ jobs:
         base:
           - image: 'docker.io/centos:centos7'
             tag_str: 'el7'
-          - image: 'quay.io/centos/centos:stream8'
-            tag_str: 'el8'
           - image: 'docker.io/library/almalinux:8'
-            tag_str: 'al8'
+            tag_str: 'el8'
           - image: 'quay.io/almalinux/almalinux:9'
             tag_str: 'el9'
           - image: 'nvidia/cuda:11.8.0-runtime-rockylinux8'
