@@ -1,12 +1,12 @@
-# Default to EL8 builds
-ARG IMAGE_BASE=quay.io/centos/centos:stream8
+# Default to EL9 builds
+ARG IMAGE_BASE=quay.io/almalinux/almalinux:9
 
 FROM $IMAGE_BASE
 
 # "ARG IMAGE_BASE" needs to be here again because the previous instance has gone out of scope.
-ARG IMAGE_BASE=quay.io/centos/centos:stream8
+ARG IMAGE_BASE=quay.io/almalinux/almalinux:9
 ARG BASE_YUM_REPO=testing
-ARG OSG_RELEASE=3.6
+ARG OSG_RELEASE=23
 
 LABEL maintainer OSG Software <help@osg-htc.org>
 
