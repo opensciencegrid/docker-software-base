@@ -18,11 +18,7 @@ RUN \
     yum makecache && \
     log "Updating OS" && time \
     yum distro-sync -y && \
-    if [[ $OSG_RELEASE =~ ^[0-9][0-9]$ ]]; then \
-       OSG_URL=https://repo.opensciencegrid.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm; \
-    else \
-       OSG_URL=https://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${DVER}-release-latest.rpm; \
-    fi && \
+    OSG_URL=https://repo.opensciencegrid.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm && \
     log "Installing EPEL/OSG repo packages" && time \
     yum -y install $OSG_URL \
                    epel-release \
