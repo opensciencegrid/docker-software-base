@@ -18,7 +18,7 @@ RUN \
     yum makecache && \
     log "Updating OS" && time \
     yum distro-sync -y && \
-    OSG_URL=https://repo.opensciencegrid.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm && \
+    OSG_URL=https://repo.osg-htc.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm && \
     log "Installing EPEL/OSG repo packages" && time \
     yum -y install $OSG_URL \
                    epel-release \
