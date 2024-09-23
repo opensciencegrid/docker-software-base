@@ -12,9 +12,6 @@ Contents
 
 ### Startup ###
 
-The startup order of scripts in this image is as follows:
-
-1. `/usr/local/sbin/image_init.sh` - To be replaced by descendant images, if necessary
-1. `/usr/local/sbin/pod_init.sh` - To be replaced by descendant images, if necessary
-1. `/usr/local/sbin/image_post_init.sh` - To be replaced by descendant images, if necessary
-1. Supervisor
+Any shell files matching `/etc/osg/image-init.d/*.sh` will be sourced
+on startup, in lexicographic order, before starting Supervisor.
+Descendant images should add files there to perform runtime initialization tasks.
