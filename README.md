@@ -14,4 +14,4 @@ Contents
 
 Any shell files matching `/etc/osg/image-init.d/*.sh` will be sourced
 on startup, in lexicographic order, before starting Supervisor.
-Descendant images should add files there to perform initialization tasks.
+Descendant images should add files there to perform runtime initialization tasks.
