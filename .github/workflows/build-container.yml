@@ -33,7 +33,6 @@ jobs:
             tag_str: 'cuda_11_8_0'
         repo: ['development', 'testing', 'release']
         series: ['23']
-        platform: ['linux/amd64','linux/arm64']
     needs: make-date-tag
     steps:
     - name: checkout docker-software-base
@@ -78,7 +77,7 @@ jobs:
       with:
         context: .
         push: true
-        platforms: ${{ matrix.platform }}
+        platforms: 'linux/amd64,linux/arm64'
         build-args: |
           IMAGE_BASE=${{ matrix.base.image }}
           BASE_YUM_REPO=${{ matrix.repo }}
