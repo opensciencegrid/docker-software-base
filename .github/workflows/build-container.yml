@@ -49,6 +49,9 @@ jobs:
         tags=()
         for registry in hub.opensciencegrid.org docker.io; do
           for docker_repo in opensciencegrid osg-htc; do
+            # Don't try to push to docker.io/osg-htc
+            [[ $docker_repo == "osg-htc" && $registry == "docker.io" ]] && continue
+
             tags+=( $registry/$docker_repo/$image_name:$SERIES-$BASE_STR-$REPO{,-$TIMESTAMP} )
           done
         done
