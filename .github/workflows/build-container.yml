@@ -20,7 +20,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: startsWith(github.repository, 'opensciencegrid/')
+    if: startsWith(github.repository, 'opensciencegrid/') || startsWith(github.repository, 'osg-htc/')
     strategy:
       fail-fast: False
       matrix:
@@ -45,10 +45,12 @@ jobs:
         SERIES: ${{ matrix.series }}
         TIMESTAMP: ${{ needs.make-date-tag.outputs.dtag }}
       run: |
-        docker_repo=${GITHUB_REPOSITORY/opensciencegrid\/docker-/opensciencegrid/}
+        image_name=${GITHUB_REPOSITORY/opensciencegrid\/docker-/}
         tags=()
         for registry in hub.opensciencegrid.org docker.io; do
-          tags+=( $registry/$docker_repo:$SERIES-$BASE_STR-$REPO{,-$TIMESTAMP} )
+          for docker_repo in opensciencegrid osg-htc; do
+            tags+=( $registry/$docker_repo/$image_name:$SERIES-$BASE_STR-$REPO{,-$TIMESTAMP} )
+          done
         done
         # This causes the tag_list array to be comma-separated below,
         # which is required for build-push-action
@@ -73,7 +75,7 @@ jobs:
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v4
-      continue-on-error: ${{ matrix.repo == 'development' && matrix.series == '23' }}
+      continue-on-error: ${{ matrix.repo == 'development' && (matrix.series == '24')}}
       with:
         context: .
         push: true
@@ -86,7 +88,7 @@ jobs:
 
   dispatch:
     runs-on: ubuntu-latest
-    if: startsWith(github.repository, 'opensciencegrid/')
+    if: startsWith(github.repository, 'opensciencegrid/') || startsWith(github.repository, 'osg-htc/')
     needs: build
     strategy:
       matrix:
