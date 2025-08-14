@@ -3,17 +3,15 @@ ARG IMAGE_BASE=quay.io/almalinux/almalinux:9
 
 FROM $IMAGE_BASE
 
-# "ARG IMAGE_BASE" needs to be here again because the previous instance has gone out of scope.
-ARG IMAGE_BASE=quay.io/almalinux/almalinux:9
 ARG BASE_YUM_REPO=testing
-ARG OSG_RELEASE=23
+ARG OSG_RELEASE=24
 
 LABEL maintainer OSG Software <help@osg-htc.org>
 
 RUN \
     log () { printf "\n%s\t%s\n\n" "$(date '+%F %X %z')" "$*" ; } ; \
-    # Attempt to grab the major version from the tag \
-    DVER=$(egrep -o '[0-9][\.0-9]*$' <<< "$IMAGE_BASE" | cut -d. -f1); \
+    # Grab the major version /etc/os-release \
+    DVER=$(awk -F '[=".]+' '/^VERSION_ID=/ {print $2}' /etc/os-release); \
     log "Updating OS YUM cache" && time \
     yum makecache && \
     log "Updating OS" && time \
@@ -69,9 +67,15 @@ COPY 00-cleanup.conf /etc/supervisord.d/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
 COPY cron.d/* /etc/cron.d/
 COPY image-init.d/* /etc/osg/image-init.d/
-RUN chmod go-w /etc/supervisord.conf /usr/local/sbin/* /etc/cron.*/*
-# For OKD, which runs as non-root user and root group
-RUN chmod g+w /var/log /var/log/supervisor /var/run
+# Post-copy chmodding
+RUN \
+    chmod go-w /etc/supervisord.conf /usr/local/sbin/* /etc/cron.*/* && \
+    # For OKD, which runs as non-root user and root group \
+    chmod g+w /var/log /var/log/supervisor /var/run && \
+    DVER=$(awk -F '[=".]+' '/^VERSION_ID=/ {print $2}' /etc/os-release); \
+    if [[ $DVER == 10 ]]; then \
+        rm -f /etc/osg/image-init.d/10-set-crypto-policies.sh; \
+    fi
 
 # Allow use of SHA1 certificates.
 # Accepted values are "YES" (enable them, even on EL9), "NO" (disable them, even on EL8), "DEFAULT" (use OS default).

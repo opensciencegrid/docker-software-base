@@ -1,4 +1,4 @@
-# This dockerfile is specific to EL10
+# This Dockerfile is specific to EL10 x86_64_v2
 ARG IMAGE_BASE=almalinux/10-base:10
 
 FROM --platform=linux/amd64/v2 $IMAGE_BASE
@@ -8,9 +8,10 @@ ARG OSG_RELEASE=24
 
 LABEL maintainer OSG Software <help@osg-htc.org>
 
-RUN --mount=type=cache,id=dnf-${OSG_RELEASE}-el10,target=/var/cache/yum,sharing=locked \
+RUN \
     log () { printf "\n%s\t%s\n\n" "$(date '+%F %X %z')" "$*" ; } ; \
-    DVER=10; \
+    # Grab the major version /etc/os-release \
+    DVER=$(awk -F '[=".]+' '/^VERSION_ID=/ {print $2}' /etc/os-release); \
     log "Updating OS YUM cache" && time \
     yum makecache && \
     log "Updating OS" && time \
@@ -50,9 +51,9 @@ RUN --mount=type=cache,id=dnf-${OSG_RELEASE}-el10,target=/var/cache/yum,sharing=
         log "Installing crypto-policies-scripts (EL8)" && time \
         yum -y install crypto-policies-scripts; \
     fi && \
-    # log "Cleaning up YUM metadata" && time \
-    # yum clean all && \
-    # rm -rf /var/cache/yum/ && \
+    log "Cleaning up YUM metadata" && time \
+    yum clean all && \
+    rm -rf /var/cache/yum/ && \
     mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
     # Support old init script dir name \
     ln -s /etc/osg/image-{init,config}.d
@@ -66,8 +67,14 @@ COPY 00-cleanup.conf /etc/supervisord.d/
 COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
 COPY cron.d/* /etc/cron.d/
 COPY image-init.d/* /etc/osg/image-init.d/
-RUN chmod go-w /etc/supervisord.conf /usr/local/sbin/* /etc/cron.*/*
-# For OKD, which runs as non-root user and root group
-RUN chmod g+w /var/log /var/log/supervisor /var/run
+# Post-copy chmodding
+RUN \
+    chmod go-w /etc/supervisord.conf /usr/local/sbin/* /etc/cron.*/* && \
+    # For OKD, which runs as non-root user and root group \
+    chmod g+w /var/log /var/log/supervisor /var/run && \
+    DVER=$(awk -F '[=".]+' '/^VERSION_ID=/ {print $2}' /etc/os-release); \
+    if [[ $DVER == 10 ]]; then \
+        rm -f /etc/osg/image-init.d/10-set-crypto-policies.sh; \
+    fi
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
