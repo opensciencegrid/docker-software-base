@@ -1,8 +1,5 @@
-# Copies all of the x86-64-v2 almalinux/10-base image into a new linux/amd64 image, changing the platform docker thinks the image is
-FROM --platform=linux/amd64/v2 almalinux/10-base:10 AS alma10base
-
-FROM --platform=linux/amd64 scratch
-COPY --from=alma10base / /
+ARG IMAGE_BASE=almalinux/10-base:10
+FROM --platform=linux/amd64/v2 $IMAGE_BASE
 
 ARG BASE_YUM_REPO=development
 ARG OSG_RELEASE=24
