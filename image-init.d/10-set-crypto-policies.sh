@@ -2,10 +2,14 @@
 
 if [[ $(id -u) = 0 ]]; then  # only root can update crypto policies
     # Set system crypto policies based on the ENABLE_SHA1 environment variable.
+    is_el8=false
+    is_el9=false
     if grep -q '^VERSION_ID=["]8' /etc/os-release; then
         is_el8=true
+    elif grep -q '^VERSION_ID=["]9' /etc/os-release; then
+        is_el9=true
     else
-        is_el8=false
+        :  # SHA1 is not supported on el10
     fi
 
     if command -v update-crypto-policies &>/dev/null; then
@@ -15,14 +19,14 @@ if [[ $(id -u) = 0 ]]; then  # only root can update crypto policies
             YES)
                 if $is_el8; then
                     update-crypto-policies --set DEFAULT >/dev/null
-                else
+                elif $is_el9; then
                     update-crypto-policies --set DEFAULT:SHA1 >/dev/null
                 fi
                 ;;
             NO)
                 if $is_el8; then
                     update-crypto-policies --set DEFAULT:NO-SHA1 >/dev/null
-                else
+                elif $is_el9; then
                     update-crypto-policies --set DEFAULT >/dev/null
                 fi
                 ;;
