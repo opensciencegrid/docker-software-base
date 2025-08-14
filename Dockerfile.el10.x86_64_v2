@@ -1,60 +1,61 @@
+# This dockerfile is specific to EL10
 ARG IMAGE_BASE=almalinux/10-base:10
+
 FROM --platform=linux/amd64/v2 $IMAGE_BASE
 
-ARG BASE_YUM_REPO=development
+ARG BASE_YUM_REPO=testing
 ARG OSG_RELEASE=24
 
 LABEL maintainer OSG Software <help@osg-htc.org>
 
 RUN --mount=type=cache,id=dnf-${OSG_RELEASE}-el10,target=/var/cache/yum,sharing=locked \
-    <<ENDRUN bash
-OSG_URL=https://repo.osg-htc.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el10-release-latest.rpm
-
-set -exu
-
-: Updating OS YUM cache
-time dnf makecache
-: Updating OS
-time dnf -y distro-sync
-
-: Installing EPEL/OSG repo packages
-time dnf -y install \${OSG_URL} epel-release dnf-plugin-config-manager
-dnf config-manager --setopt=install_weak_deps=False --save >/dev/null
-/usr/bin/crb enable
-if [[ ${BASE_YUM_REPO} != "release" ]]
-then
-    dnf config-manager --enable osg-${BASE_YUM_REPO}
-    dnf config-manager --enable osg-upcoming-${BASE_YUM_REPO}
-else
-    dnf config-manager --enable osg-upcoming
-fi
-
-# Impatiently ignore the Yum mirrors
-sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
-    /etc/yum.repos.d/osg*.repo
-
-: Updating EPEL/OSG YUM cache
-time dnf makecache
-
-: Installing common software
-time dnf -y install \
-                    supervisor \
-                    cronie \
-                    osg-ca-certs \
-                    which \
-                    less \
-                    rpmdevtools \
-                    fakeroot \
-                    /usr/bin/ps
-
-# Note: fetch-crl is not available on EL10
-
-mkdir -p /etc/osg/image-{cleanup,init}.d/
-
-# Support old init script dir name
-ln -s /etc/osg/image-init.d /etc/osg/image-config.d
-
-ENDRUN
+    log () { printf "\n%s\t%s\n\n" "$(date '+%F %X %z')" "$*" ; } ; \
+    DVER=10; \
+    log "Updating OS YUM cache" && time \
+    yum makecache && \
+    log "Updating OS" && time \
+    yum distro-sync -y && \
+    OSG_URL=https://repo.osg-htc.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm && \
+    log "Installing EPEL/OSG repo packages" && time \
+    yum -y install $OSG_URL \
+                   epel-release \
+                   yum-utils && \
+    yum-config-manager --setopt=install_weak_deps=False --save > /dev/null && \
+    /usr/bin/crb enable && \
+    if [[ $BASE_YUM_REPO != "release" ]]; then \
+        yum-config-manager --enable osg-${BASE_YUM_REPO}; \
+        yum-config-manager --enable osg-upcoming-${BASE_YUM_REPO}; else \
+        yum-config-manager --enable osg-upcoming; \
+    fi && \
+    # Impatiently ignore the Yum mirrors
+    sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+        /etc/yum.repos.d/osg*.repo && \
+    log "Updating EPEL/OSG YUM cache" && time \
+    yum makecache && \
+    log "Installing common software" && time \
+    yum -y install supervisor \
+                   cronie \
+                   osg-ca-certs \
+                   which \
+                   less \
+                   rpmdevtools \
+                   fakeroot \
+                   /usr/bin/ps \
+                   && \
+    if [[ $DVER != 10 ]]; then \
+        log "Installing fetch-crl" && time \
+        yum -y install fetch-crl; \
+    fi && \
+    if [[ $DVER == 8 ]]; then \
+        log "Installing crypto-policies-scripts (EL8)" && time \
+        yum -y install crypto-policies-scripts; \
+    fi && \
+    # log "Cleaning up YUM metadata" && time \
+    # yum clean all && \
+    # rm -rf /var/cache/yum/ && \
+    mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
+    # Support old init script dir name \
+    ln -s /etc/osg/image-{init,config}.d
 
 COPY bin/* /usr/local/bin/
 COPY supervisord_startup.sh /usr/local/sbin/

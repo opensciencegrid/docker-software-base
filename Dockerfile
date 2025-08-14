@@ -57,7 +57,7 @@ RUN \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
     mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
-    # Support old init script dir name
+    # Support old init script dir name \
     ln -s /etc/osg/image-{init,config}.d
 
 COPY bin/* /usr/local/bin/
