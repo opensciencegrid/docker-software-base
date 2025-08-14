@@ -72,6 +72,7 @@ RUN chmod g+w /var/log /var/log/supervisor /var/run
 
 # Allow use of SHA1 certificates.
 # Accepted values are "YES" (enable them, even on EL9), "NO" (disable them, even on EL8), "DEFAULT" (use OS default).
+# No effect on EL10
 ENV ENABLE_SHA1=DEFAULT
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]

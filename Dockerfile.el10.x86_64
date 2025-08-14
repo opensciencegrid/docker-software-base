@@ -1,0 +1,75 @@
+# Copies all of the x86-64-v2 almalinux/10-base image into a new linux/amd64 image, changing the platform docker thinks the image is
+FROM --platform=linux/amd64/v2 almalinux/10-base:10 AS alma10base
+
+FROM --platform=linux/amd64 scratch
+COPY --from=alma10base / /
+
+ARG BASE_YUM_REPO=development
+ARG OSG_RELEASE=24
+
+LABEL maintainer OSG Software <help@osg-htc.org>
+
+RUN --mount=type=cache,id=dnf-${OSG_RELEASE}-el10,target=/var/cache/yum,sharing=locked \
+    <<ENDRUN bash
+OSG_URL=https://repo.osg-htc.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el10-release-latest.rpm
+
+set -exu
+
+: Updating OS YUM cache
+time dnf makecache
+: Updating OS
+time dnf -y distro-sync
+
+: Installing EPEL/OSG repo packages
+time dnf -y install \${OSG_URL} epel-release dnf-plugin-config-manager
+dnf config-manager --setopt=install_weak_deps=False --save >/dev/null
+/usr/bin/crb enable
+if [[ ${BASE_YUM_REPO} != "release" ]]
+then
+    dnf config-manager --enable osg-${BASE_YUM_REPO}
+    dnf config-manager --enable osg-upcoming-${BASE_YUM_REPO}
+else
+    dnf config-manager --enable osg-upcoming
+fi
+
+# Impatiently ignore the Yum mirrors
+sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+    /etc/yum.repos.d/osg*.repo
+
+: Updating EPEL/OSG YUM cache
+time dnf makecache
+
+: Installing common software
+time dnf -y install \
+                    supervisor \
+                    cronie \
+                    osg-ca-certs \
+                    which \
+                    less \
+                    rpmdevtools \
+                    fakeroot \
+                    /usr/bin/ps
+
+# Note: fetch-crl is not available on EL10
+
+mkdir -p /etc/osg/image-{cleanup,init}.d/
+
+# Support old init script dir name
+ln -s /etc/osg/image-init.d /etc/osg/image-config.d
+
+ENDRUN
+
+COPY bin/* /usr/local/bin/
+COPY supervisord_startup.sh /usr/local/sbin/
+COPY crond_startup.sh /usr/local/sbin/
+COPY container_cleanup.sh /usr/local/sbin/
+COPY supervisord.conf /etc/
+COPY 00-cleanup.conf /etc/supervisord.d/
+COPY update-certs-rpms-if-present.sh /etc/cron.hourly/
+COPY cron.d/* /etc/cron.d/
+COPY image-init.d/* /etc/osg/image-init.d/
+RUN chmod go-w /etc/supervisord.conf /usr/local/sbin/* /etc/cron.*/*
+# For OKD, which runs as non-root user and root group
+RUN chmod g+w /var/log /var/log/supervisor /var/run
+
+CMD ["/usr/local/sbin/supervisord_startup.sh"]
