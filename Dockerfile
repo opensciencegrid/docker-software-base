@@ -30,12 +30,14 @@ RUN \
         yum-config-manager --enable osg-upcoming-${BASE_YUM_REPO}; else \
         yum-config-manager --enable osg-upcoming; \
     fi && \
+    # Impatiently ignore the Yum mirrors
+    sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+        /etc/yum.repos.d/osg*.repo && \
     log "Updating EPEL/OSG YUM cache" && time \
     yum makecache && \
     log "Installing common software" && time \
     yum -y install supervisor \
                    cronie \
-                   fetch-crl \
                    osg-ca-certs \
                    which \
                    less \
@@ -43,6 +45,10 @@ RUN \
                    fakeroot \
                    /usr/bin/ps \
                    && \
+    if [[ $DVER != 10 ]]; then \
+        log "Installing fetch-crl" && time \
+        yum -y install fetch-crl; \
+    fi && \
     if [[ $DVER == 8 ]]; then \
         log "Installing crypto-policies-scripts (EL8)" && time \
         yum -y install crypto-policies-scripts; \
@@ -50,9 +56,6 @@ RUN \
     log "Cleaning up YUM metadata" && time \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
-    # Impatiently ignore the Yum mirrors
-    sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
-        /etc/yum.repos.d/osg*.repo && \
     mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
     # Support old init script dir name
     ln -s /etc/osg/image-{init,config}.d
