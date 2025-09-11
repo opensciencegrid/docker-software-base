@@ -41,12 +41,9 @@ RUN \
                    less \
                    rpmdevtools \
                    fakeroot \
+                   fetch-crl \
                    /usr/bin/ps \
                    && \
-    if [[ $DVER != 10 ]]; then \
-        log "Installing fetch-crl" && time \
-        yum -y install fetch-crl; \
-    fi && \
     if [[ $DVER == 8 ]]; then \
         log "Installing crypto-policies-scripts (EL8)" && time \
         yum -y install crypto-policies-scripts; \
