@@ -3,17 +3,15 @@ ARG IMAGE_BASE=quay.io/almalinux/almalinux:9
 
 FROM $IMAGE_BASE
 
-# "ARG IMAGE_BASE" needs to be here again because the previous instance has gone out of scope.
-ARG IMAGE_BASE=quay.io/almalinux/almalinux:9
 ARG BASE_YUM_REPO=testing
-ARG OSG_RELEASE=23
+ARG OSG_RELEASE=24
 
 LABEL maintainer OSG Software <help@osg-htc.org>
 
 RUN \
     log () { printf "\n%s\t%s\n\n" "$(date '+%F %X %z')" "$*" ; } ; \
-    # Attempt to grab the major version from the tag \
-    DVER=$(egrep -o '[0-9][\.0-9]*$' <<< "$IMAGE_BASE" | cut -d. -f1); \
+    # Grab the major version /etc/os-release \
+    DVER=$(awk -F '[=".]+' '/^VERSION_ID=/ {print $2}' /etc/os-release); \
     log "Updating OS YUM cache" && time \
     yum makecache && \
     log "Updating OS" && time \
@@ -30,6 +28,9 @@ RUN \
         yum-config-manager --enable osg-upcoming-${BASE_YUM_REPO}; else \
         yum-config-manager --enable osg-upcoming; \
     fi && \
+    # Impatiently ignore the Yum mirrors
+    sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+        /etc/yum.repos.d/osg*.repo && \
     log "Updating EPEL/OSG YUM cache" && time \
     yum makecache && \
     log "Installing common software" && time \
@@ -50,11 +51,8 @@ RUN \
     log "Cleaning up YUM metadata" && time \
     yum clean all && \
     rm -rf /var/cache/yum/ && \
-    # Impatiently ignore the Yum mirrors
-    sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
-        /etc/yum.repos.d/osg*.repo && \
     mkdir -p /etc/osg/image-{cleanup,init}.d/ && \
-    # Support old init script dir name
+    # Support old init script dir name \
     ln -s /etc/osg/image-{init,config}.d
 
 COPY bin/* /usr/local/bin/
@@ -72,6 +70,7 @@ RUN chmod g+w /var/log /var/log/supervisor /var/run
 
 # Allow use of SHA1 certificates.
 # Accepted values are "YES" (enable them, even on EL9), "NO" (disable them, even on EL8), "DEFAULT" (use OS default).
+# No effect on EL10
 ENV ENABLE_SHA1=DEFAULT
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
