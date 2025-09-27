@@ -12,11 +12,15 @@ RUN \
     log () { printf "\n%s\t%s\n\n" "$(date '+%F %X %z')" "$*" ; } ; \
     # Grab the major version /etc/os-release \
     DVER=$(awk -F '[=".]+' '/^VERSION_ID=/ {print $2}' /etc/os-release); \
+    if [ $DVER = 10 ] && [ "$(rpm -E '%{x86_64_v2}')" = 1 ]; then \
+        OSG_URL=https://repo.osg-htc.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el10-release-latest.x86_64_v2.rpm; \
+    else \
+        OSG_URL=https://repo.osg-htc.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm; \
+    fi; \
     log "Updating OS YUM cache" && time \
     yum makecache && \
     log "Updating OS" && time \
     yum distro-sync -y && \
-    OSG_URL=https://repo.osg-htc.org/osg/${OSG_RELEASE}-main/osg-${OSG_RELEASE}-main-el${DVER}-release-latest.rpm && \
     log "Installing EPEL/OSG repo packages" && time \
     yum -y install $OSG_URL \
                    epel-release \
