@@ -35,16 +35,10 @@ jobs:
             # ^^ see scripts/create-alma10-base.sh for how this gets created
             tag_str: 'el10'
         repo: ['development', 'testing', 'release']
-        series: ['23', '24', '25']
+        series: ['24', '25']
         exclude:
-          - series: '23'
-            base: {image: 'hub.opensciencegrid.org/osg-htc/alma10-base:combo', tag_str: 'el10'}
           - series: '24'
             base: {image: 'hub.opensciencegrid.org/osg-htc/alma10-base:combo', tag_str: 'el10'}
-          - series: '25'
-            repo: 'release'
-          - series: '25'
-            repo: 'testing'
     needs: make-date-tag
     steps:
     - name: checkout docker-software-base
