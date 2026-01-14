@@ -1,5 +1,5 @@
 # Default to EL9 builds
-ARG IMAGE_BASE=quay.io/almalinux/almalinux:9
+ARG IMAGE_BASE=docker.io/library/almalinux:9
 
 FROM $IMAGE_BASE
 
