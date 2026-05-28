@@ -52,10 +52,7 @@ fail () {
 
 
 warn () {
-    local ret=${1}
-    shift
     echo -e "$Prog:" "$@" >&2
-    return "$ret"
 }
 
 
