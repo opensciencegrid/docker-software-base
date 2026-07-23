@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if [[ -z $(shopt -s nullglob && echo /etc/osg/image-cleanup.d/*.sh) ]]; then
-    exit 0
-fi
-
 # Allow child images to add cleanup customizations
 source_cleanup () {
     for x in /etc/osg/image-cleanup.d/*.sh; do source "$x"; done
