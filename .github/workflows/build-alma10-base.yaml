@@ -1,0 +1,32 @@
+name: build-alma10-base
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'  # once a week on Sundays at midnight
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: install podman
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y podman  
+        
+    - name: checkout docker-software-base
+      uses: actions/checkout@v3
+      
+    - name: Log in to OSG Harbor
+      uses: docker/login-action@v2.2.0
+      with:
+        registry: hub.opensciencegrid.org
+        username: ${{ secrets.OSG_HARBOR_ROBOT_USER }}
+        password: ${{ secrets.OSG_HARBOR_ROBOT_PASSWORD }}
+
+    - name: Build alma10-base image
+      run: |
+        yes no | scripts/create-alma10-base.sh
+
+    - name: Push alma10-base image to OSG Harbor
+      run: |
+        podman manifest push hub.opensciencegrid.org/osg-htc/alma10-base:combo
