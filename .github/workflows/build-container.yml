@@ -36,9 +36,6 @@ jobs:
             tag_str: 'el10'
         repo: ['development', 'testing', 'release']
         series: ['25', '26']
-        exclude:
-          - series: '26'
-            repo: 'release' # TODO: OSG 26 is not yet released
     needs: make-date-tag
     steps:
     - name: checkout docker-software-base
