@@ -2,7 +2,11 @@
 
 # Allow the derived images to run any additional runtime customizations
 shopt -s nullglob
-for x in /etc/osg/image-init.d/*.sh; do source "$x"; done
+for x in /etc/osg/image-init.d/*.sh; do
+    echo "$(date "+%Y-%m-%d %H:%M:%S") [$(basename "$0")] Sourcing init script $(basename "$x") ..."
+    source "$x"
+    echo "$(date "+%Y-%m-%d %H:%M:%S") [$(basename "$0")] Done."
+done
 shopt -u nullglob
 
 chmod go-w /etc/cron.*/* 2>/dev/null || :
